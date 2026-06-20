@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>白袍人生學院｜一對一諮詢戰績與常見問題</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500;700&family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1A3D63;      /* 學院藍 */
+    --ink:#0E2A45;       /* 沉靜藍 */
+    --sky:#5E8CB5;       /* 晨曦藍 */
+    --gold:#E0A235;      /* 曙光金 */
+    --coat:#FBF9F3;      /* 白袍白 */
+    --graphite:#2E343A;  /* 石墨灰 */
+    --cloud:#E9E7E0;     /* 雲灰 */
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    font-family:'Noto Sans TC',sans-serif;
+    background:var(--ink);
+    color:var(--graphite);
+    overflow:hidden;
+  }
+  .serif{font-family:'Noto Serif TC',serif;}
+  .mono{font-family:'Montserrat',sans-serif;}
+
+  /* ---- Deck frame ---- */
+  #deck{position:fixed;inset:0;}
+  .slide{
+    position:absolute;inset:0;
+    display:none;
+    flex-direction:column;
+    padding:6vh 8vw;
+    opacity:0;
+    transition:opacity .45s ease;
+  }
+  .slide.active{display:flex;opacity:1;}
+  .slide.light{background:var(--coat);}
+  .slide.dark{background:var(--navy);color:var(--coat);}
+  .slide.ink{background:var(--ink);color:var(--coat);}
+
+  /* light-on-dark text helpers */
+  .dark .body,.ink .body{color:rgba(251,249,243,.86);}
+  .light .body{color:var(--graphite);}
+
+  /* gold short line */
+  .goldline{width:64px;height:5px;background:var(--gold);border-radius:2px;margin:18px 0;}
+
+  /* 光 radial graphic */
+  .glow{
+    position:absolute;width:520px;height:520px;pointer-events:none;
+    background:repeating-conic-gradient(from 0deg,
+      rgba(224,162,53,.20) 0deg 9deg, transparent 9deg 18deg);
+    -webkit-mask:radial-gradient(circle,#000 28%,transparent 70%);
+            mask:radial-gradient(circle,#000 28%,transparent 70%);
+  }
+
+  /* eyebrow / kicker */
+  .kicker{font-family:'Montserrat',sans-serif;font-size:clamp(11px,1vw,13px);
+    letter-spacing:.22em;font-weight:600;color:var(--gold);}
+  .dept{font-size:clamp(13px,1.3vw,16px);color:var(--sky);letter-spacing:.08em;}
+
+  /* headings */
+  h1{font-family:'Noto Serif TC',serif;font-weight:900;
+    font-size:clamp(30px,5.2vw,62px);line-height:1.32;}
+  h2{font-family:'Noto Serif TC',serif;font-weight:900;
+    font-size:clamp(24px,3.6vw,42px);line-height:1.34;}
+  .gold{color:var(--gold);}
+  .body{font-weight:300;font-size:clamp(15px,1.55vw,20px);line-height:2.0;}
+
+  /* cover */
+  .cover-foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;}
+  .badge{display:inline-flex;align-items:center;gap:10px;
+    border:1px solid rgba(224,162,53,.5);border-radius:40px;padding:8px 18px;
+    font-size:clamp(12px,1.2vw,15px);color:var(--gold);letter-spacing:.05em;}
+
+  /* stat grid */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2.2vw;margin-top:3vh;}
+  .stat{border-top:3px solid var(--gold);padding-top:18px;}
+  .stat .num{font-family:'Montserrat',sans-serif;font-weight:700;
+    font-size:clamp(38px,6.5vw,82px);color:var(--gold);line-height:1;}
+  .stat .lab{margin-top:10px;font-size:clamp(13px,1.3vw,17px);color:rgba(251,249,243,.82);font-weight:400;}
+
+  /* profile columns */
+  .cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.4vw;margin-top:3vh;}
+  .col h3{font-family:'Noto Serif TC',serif;font-size:clamp(17px,1.9vw,23px);color:var(--coat);margin-bottom:14px;}
+  .col.light h3{color:var(--navy);}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{font-size:clamp(12px,1.2vw,15px);font-weight:400;
+    background:rgba(94,140,181,.18);color:var(--coat);
+    border:1px solid rgba(94,140,181,.4);border-radius:30px;padding:6px 14px;}
+  .light .chip{background:#fff;color:var(--navy);border:1px solid var(--cloud);}
+
+  /* theme overview map */
+  .map{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 3vw;margin-top:3vh;}
+  .mapitem{display:flex;align-items:baseline;gap:14px;font-size:clamp(15px,1.6vw,21px);
+    padding-bottom:12px;border-bottom:1px solid var(--cloud);}
+  .mapitem .n{font-family:'Montserrat',sans-serif;font-weight:700;color:var(--gold);font-size:clamp(16px,1.7vw,22px);min-width:34px;}
+  .mapitem .t{font-family:'Noto Serif TC',serif;font-weight:700;color:var(--navy);}
+
+  /* theme detail */
+  .theme-head{display:flex;align-items:flex-start;gap:22px;}
+  .theme-no{font-family:'Montserrat',sans-serif;font-weight:700;
+    font-size:clamp(40px,7vw,96px);color:rgba(224,162,53,.85);line-height:.9;}
+  .qlist{margin-top:auto;display:flex;flex-direction:column;gap:16px;}
+  .q{display:flex;gap:16px;align-items:flex-start;
+    font-size:clamp(15px,1.7vw,22px);line-height:1.6;font-weight:300;}
+  .q .mk{color:var(--gold);font-weight:700;flex-shrink:0;font-family:'Noto Serif TC',serif;}
+  .dark .q,.ink .q{color:rgba(251,249,243,.9);}
+  .light .q{color:var(--graphite);}
+
+  /* quote slide */
+  .quote{display:flex;flex-direction:column;justify-content:center;height:100%;}
+  .quote .big{font-family:'Noto Serif TC',serif;font-weight:900;
+    font-size:clamp(28px,5vw,60px);line-height:1.5;}
+
+  /* CTA */
+  .cta-box{margin-top:3vh;background:rgba(14,42,69,.55);border:1px solid rgba(224,162,53,.35);
+    border-radius:18px;padding:clamp(20px,3vw,40px);}
+  .cta-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:18px;}
+  .pill{display:inline-block;text-decoration:none;background:var(--gold);color:var(--ink);font-weight:700;
+    border-radius:40px;padding:13px 28px;font-size:clamp(14px,1.4vw,18px);transition:transform .15s,box-shadow .15s;}
+  .pill:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(224,162,53,.35);}
+  .pill.ghost{background:transparent;color:var(--gold);border:1px solid var(--gold);}
+  .pill.ghost:hover{box-shadow:0 8px 22px rgba(224,162,53,.18);}
+
+  /* 入群三步驟 step cards */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1.8vw;margin-top:2.6vh;}
+  .step{background:#fff;border:1px solid var(--cloud);border-radius:16px;padding:clamp(16px,1.6vw,22px);}
+  .step .badge2{display:inline-block;background:var(--navy);color:#fff;font-family:'Montserrat',sans-serif;
+    font-weight:700;font-size:11px;letter-spacing:.12em;padding:5px 12px;border-radius:20px;}
+  .step h4{font-family:'Noto Serif TC',serif;color:var(--navy);font-size:clamp(16px,1.8vw,21px);
+    margin:12px 0 10px;font-weight:900;}
+  .step ul{list-style:none;display:flex;flex-direction:column;gap:8px;}
+  .step li{font-size:clamp(13px,1.25vw,16px);line-height:1.6;color:var(--graphite);font-weight:300;
+    padding-left:16px;position:relative;}
+  .step li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+  .step a{color:var(--navy);font-weight:500;}
+  .reminder{margin-top:2vh;background:rgba(224,162,53,.12);border-left:4px solid var(--gold);
+    border-radius:8px;padding:14px 18px;font-size:clamp(12.5px,1.2vw,15.5px);line-height:1.75;color:var(--graphite);}
+  .reminder b{color:var(--navy);}
+
+  /* footer brand bar */
+  .brandbar{position:absolute;left:8vw;bottom:3.2vh;display:flex;align-items:center;gap:12px;
+    font-size:clamp(11px,1vw,13px);letter-spacing:.04em;}
+  .light .brandbar{color:var(--sky);}
+  .dark .brandbar,.ink .brandbar{color:rgba(251,249,243,.6);}
+  .brandbar .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+
+  /* nav controls */
+  #nav{position:fixed;right:24px;bottom:22px;display:flex;align-items:center;gap:12px;z-index:50;}
+  .navbtn{width:42px;height:42px;border-radius:50%;border:none;cursor:pointer;
+    background:rgba(224,162,53,.92);color:var(--ink);font-size:20px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;transition:transform .15s;}
+  .navbtn:hover{transform:scale(1.08);}
+  .navbtn:disabled{opacity:.3;cursor:default;transform:none;}
+  #counter{font-family:'Montserrat',sans-serif;font-size:13px;color:rgba(251,249,243,.85);
+    background:rgba(14,42,69,.7);padding:6px 12px;border-radius:30px;}
+
+  /* progress dots */
+  #dots{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;display:flex;gap:7px;z-index:50;}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.28);cursor:pointer;transition:all .2s;}
+  .dot.on{background:var(--gold);width:22px;border-radius:5px;}
+
+  .hint{position:fixed;left:24px;bottom:24px;font-size:12px;color:rgba(251,249,243,.45);
+    font-family:'Montserrat',sans-serif;letter-spacing:.05em;z-index:50;}
+
+  @media (max-width:760px){
+    /* 手機友善：整頁可垂直捲動、不裁切 */
+    .slide{
+      padding:5.5vh 7vw 15vh;
+      justify-content:flex-start;
+      overflow-y:auto;
+      overflow-x:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
+    /* 桌機用 margin-top:auto 推到底，手機改回正常間距避免被推出畫面 */
+    .slide [style*="margin-top:auto"]{margin-top:22px !important;}
+    .qlist{margin-top:26px;}
+    .quote{height:auto;justify-content:flex-start;}
+    .brandbar{position:static;left:auto;bottom:auto;margin-top:26px;}
+    .stats{grid-template-columns:repeat(2,1fr);gap:22px;}
+    .cols{grid-template-columns:1fr;gap:20px;}
+    .map{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;gap:14px;}
+    .theme-no{font-size:54px;}
+    h1{font-size:30px;}
+    h2{font-size:25px;}
+    .glow{width:300px;height:300px;}
+    .hint,#dots{display:none;}          /* 手機隱藏小圓點，保留箭頭 */
+    #nav{right:14px;bottom:14px;}
+    .navbtn{width:46px;height:46px;}     /* 加大觸控目標 */
+  }
+</style>
+</head>
+<body>
+<div id="deck">
+
+  <!-- 1 COVER -->
+  <section class="slide ink active" data-name="封面">
+    <div class="glow" style="right:-120px;top:-120px;"></div>
+    <div class="kicker">WHITE COAT LIFE ACADEMY ｜ 一對一諮詢實錄</div>
+    <div style="margin-top:auto;">
+      <div class="dept">光是 2026 年，就累積近 30 場一對一付費諮詢</div>
+      <h1 style="margin-top:14px;">我陪近 30 位醫師<br>走過的<span class="gold">那些關鍵抉擇</span></h1>
+      <div class="goldline"></div>
+      <p class="body" style="max-width:760px;">
+        他們來自不同科別、不同階段，<br>
+        卻問著驚人相似的問題。<br>
+        這份整理，把這些問題攤開給你看——<br>
+        因為<span class="gold">別人卡住的地方，很可能也是你的。</span>
+      </p>
+    </div>
+    <div class="cover-foot">
+      <div class="badge">● 內容已全面去識別化　保護每一位諮詢者</div>
+      <div class="mono" style="color:rgba(251,249,243,.55);font-size:13px;">豪老師 ｜ 張益豪醫師</div>
+    </div>
+  </section>
+
+  <!-- 2 緣起 -->
+  <section class="slide light" data-name="緣起">
+    <div class="kicker" style="color:var(--navy);">WHY THIS MATTERS</div>
+    <div class="goldline"></div>
+    <h2 style="color:var(--navy);">很多醫師私訊我，<br>問的第一句話幾乎都一樣。</h2>
+    <p class="body" style="margin-top:3vh;max-width:820px;">
+      「豪老師，我這個情況，<span style="color:var(--navy);font-weight:500;">適不適合……？</span>」<br><br>
+      我們在醫學院，學會了醫療。<br>
+      卻沒有人教我們——<br>
+      開業、稅務、合約、品牌、談判、留才。<br><br>
+      於是我把這幾年諮詢過的醫師，<br>
+      最真實的提問整理出來。<br>
+      <span style="color:var(--navy);font-weight:500;">讓你知道，你不孤單；也讓你看見，下一步可以怎麼走。</span>
+    </p>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 3 戰績數字 -->
+  <section class="slide dark" data-name="戰績總覽">
+    <div class="glow" style="left:-160px;bottom:-160px;opacity:.7;"></div>
+    <div class="kicker">TRACK RECORD 2026 ｜ 戰績總覽</div>
+    <div class="goldline"></div>
+    <h2>光是 2026 年，<span class="gold">數字</span>就這樣說話。</h2>
+    <div class="stats">
+      <div class="stat"><div class="num"><span style="font-size:.5em;">近</span>30<span style="font-size:.4em;">場</span></div><div class="lab">2026 年一對一付費諮詢場次</div></div>
+      <div class="stat"><div class="num"><span style="font-size:.5em;">近</span>30<span style="font-size:.4em;">位</span></div><div class="lab">2026 年諮詢過的醫師人數</div></div>
+      <div class="stat"><div class="num">15<span style="font-size:.4em;">+</span></div><div class="lab">橫跨的專科領域</div></div>
+      <div class="stat"><div class="num">9<span style="font-size:.4em;">縣市</span></div><div class="lab">北中南全台都有</div></div>
+    </div>
+    <p class="body" style="margin-top:auto;">
+      從住院醫師到診所院長，從健保診所到全自費單位——<br>
+      不同階段的醫師，都在這裡找到自己的答案。
+    </p>
+  </section>
+
+  <!-- 4 諮詢者輪廓 -->
+  <section class="slide light" data-name="諮詢者輪廓">
+    <div class="kicker" style="color:var(--navy);">WHO CAME TO ME ｜ 誰來找我諮詢</div>
+    <div class="goldline"></div>
+    <h2 style="color:var(--navy);">這些醫師，可能就是現在的你。</h2>
+    <div class="cols light">
+      <div class="col">
+        <h3>跨越的身份</h3>
+        <div class="chips">
+          <span class="chip">醫院主治醫師</span>
+          <span class="chip">診所受僱醫師</span>
+          <span class="chip">診所院長／已開業</span>
+          <span class="chip">掛牌負責人</span>
+          <span class="chip">住院醫師 PGY</span>
+        </div>
+      </div>
+      <div class="col">
+        <h3>涵蓋的專科</h3>
+        <div class="chips">
+          <span class="chip">耳鼻喉科</span><span class="chip">皮膚科</span>
+          <span class="chip">醫美</span><span class="chip">中醫</span>
+          <span class="chip">家醫科</span><span class="chip">兒科</span>
+          <span class="chip">急診</span><span class="chip">整形外科</span>
+          <span class="chip">泌尿科</span><span class="chip">神經科</span>
+          <span class="chip">精神／身心科</span><span class="chip">心臟血管外科</span>
+          <span class="chip">內科</span><span class="chip">復健醫療</span>
+        </div>
+      </div>
+      <div class="col">
+        <h3>分布的地域</h3>
+        <div class="chips">
+          <span class="chip">台北</span><span class="chip">新北</span>
+          <span class="chip">桃園</span><span class="chip">新竹</span>
+          <span class="chip">台中</span><span class="chip">彰化</span>
+          <span class="chip">台南</span><span class="chip">高雄</span>
+          <span class="chip">嘉義</span>
+        </div>
+      </div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 5 問題全景 -->
+  <section class="slide ink" data-name="問題全景">
+    <div class="glow" style="right:-180px;top:-140px;opacity:.6;"></div>
+    <div class="kicker">THE 10 BIG QUESTIONS ｜ 問題全景</div>
+    <div class="goldline"></div>
+    <h2>近 30 場諮詢，收斂成<span class="gold"> 10 大主題</span>。</h2>
+    <div class="map">
+      <div class="mapitem"><span class="n">01</span><span class="t" style="color:var(--coat);">開業決策與時機</span></div>
+      <div class="mapitem"><span class="n">02</span><span class="t" style="color:var(--coat);">選址與診所定位</span></div>
+      <div class="mapitem"><span class="n">03</span><span class="t" style="color:var(--coat);">財務、稅務與資金</span></div>
+      <div class="mapitem"><span class="n">04</span><span class="t" style="color:var(--coat);">人事招募與留才</span></div>
+      <div class="mapitem"><span class="n">05</span><span class="t" style="color:var(--coat);">合夥與合作模式</span></div>
+      <div class="mapitem"><span class="n">06</span><span class="t" style="color:var(--coat);">掛牌負責人的風險</span></div>
+      <div class="mapitem"><span class="n">07</span><span class="t" style="color:var(--coat);">自費醫療經營</span></div>
+      <div class="mapitem"><span class="n">08</span><span class="t" style="color:var(--coat);">個人品牌與自媒體</span></div>
+      <div class="mapitem"><span class="n">09</span><span class="t" style="color:var(--coat);">職涯選擇與談判</span></div>
+      <div class="mapitem"><span class="n">10</span><span class="t" style="color:var(--coat);">時間管理與家庭平衡</span></div>
+    </div>
+  </section>
+
+  <!-- 6 主題1 -->
+  <section class="slide light" data-name="主題1 開業決策">
+    <div class="theme-head">
+      <div class="theme-no">01</div>
+      <div>
+        <div class="kicker" style="color:var(--navy);">THEME 01</div>
+        <h2 style="color:var(--navy);">開業決策與時機</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>我到底適不適合開業？該先買房，還是先開業？</span></div>
+      <div class="q"><span class="mk">Q</span><span>開 ENT 診所是「保險牌」，還是直接轉戰自費醫美？</span></div>
+      <div class="q"><span class="mk">Q</span><span>先自己開，還是等承接家裡的診所時再一併規劃？</span></div>
+      <div class="q"><span class="mk">Q</span><span>常聽到「收入要 2～3 倍才建議開業」，我該怎麼突破現況？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 7 主題2 -->
+  <section class="slide dark" data-name="主題2 選址定位">
+    <div class="theme-head">
+      <div class="theme-no">02</div>
+      <div>
+        <div class="kicker">THEME 02</div>
+        <h2>選址與診所定位</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>該選「沒有競爭者」的點，還是「競爭多但受眾也多」的點？</span></div>
+      <div class="q"><span class="mk">Q</span><span>健保與自費的比重，到底怎麼拿捏才對？</span></div>
+      <div class="q"><span class="mk">Q</span><span>跟周邊同類診所，我要靠什麼勝出、做出護城河？</span></div>
+      <div class="q"><span class="mk">Q</span><span>回鄉開，還是留在現居地開？跨縣市的取捨怎麼想？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 8 主題3 -->
+  <section class="slide light" data-name="主題3 財務稅務">
+    <div class="theme-head">
+      <div class="theme-no">03</div>
+      <div>
+        <div class="kicker" style="color:var(--navy);">THEME 03</div>
+        <h2 style="color:var(--navy);">財務、稅務與資金</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>執行業務所得的稅率怎麼算？診所成本能從多久前開始認列？</span></div>
+      <div class="q"><span class="mk">Q</span><span>全自費都收現金，要不要刷卡？又該怎麼合法節稅？</span></div>
+      <div class="q"><span class="mk">Q</span><span>開業前期要預留多少「燒錢期」資金？自有還是借貸？</span></div>
+      <div class="q"><span class="mk">Q</span><span>看財務報表，最該盯緊的是哪幾個關鍵數字？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 9 主題4 -->
+  <section class="slide dark" data-name="主題4 人事留才">
+    <div class="theme-head">
+      <div class="theme-no">04</div>
+      <div>
+        <div class="kicker">THEME 04</div>
+        <h2>人事招募與留才</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>技術養成 learning curve 很長，栽培好卻離職，怎麼簽約留才？</span></div>
+      <div class="q"><span class="mk">Q</span><span>一個醫師一間診所，最少要請幾位護理師才夠？</span></div>
+      <div class="q"><span class="mk">Q</span><span>用股權留住醫師人才可行嗎？獎金要高底薪，還是高分潤？</span></div>
+      <div class="q"><span class="mk">Q</span><span>遇到員工產假、病假怎麼應對？最晚開業前多久要把人補齊？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 10 主題5 -->
+  <section class="slide light" data-name="主題5 合夥合作">
+    <div class="theme-head">
+      <div class="theme-no">05</div>
+      <div>
+        <div class="kicker" style="color:var(--navy);">THEME 05</div>
+        <h2 style="color:var(--navy);">合夥與合作模式</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>合夥還是獨資？找資深醫師入股，優缺點各是什麼？</span></div>
+      <div class="q"><span class="mk">Q</span><span>合作的合約、分工、資金、損益，到底該怎麼談？</span></div>
+      <div class="q"><span class="mk">Q</span><span>顧問制／輔導分紅／入股／年度諮詢，我該選哪一種？</span></div>
+      <div class="q"><span class="mk">Q</span><span>怎麼在合作裡，保障自己的權益與點子不被偷走？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 11 主題6 -->
+  <section class="slide dark" data-name="主題6 負責人風險">
+    <div class="theme-head">
+      <div class="theme-no">06</div>
+      <div>
+        <div class="kicker">THEME 06</div>
+        <h2>掛牌負責人的風險</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>當掛牌負責人，有哪些「防護不足」的地方我沒注意到？</span></div>
+      <div class="q"><span class="mk">Q</span><span>牌費理應多少？承擔的責任與風險，怎麼衡量才合理？</span></div>
+      <div class="q"><span class="mk">Q</span><span>哪些狀況，是「看到就要逃、不要簽」的紅燈？</span></div>
+      <div class="q"><span class="mk">Q</span><span>合約上，一定要先寫進哪些保護自己的條款？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 12 主題7 -->
+  <section class="slide light" data-name="主題7 自費經營">
+    <div class="theme-head">
+      <div class="theme-no">07</div>
+      <div>
+        <div class="kicker" style="color:var(--navy);">THEME 07</div>
+        <h2 style="color:var(--navy);">自費醫療經營</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>自費醫療的 EBM 與陷阱？怎麼避免被說是「割韭菜」？</span></div>
+      <div class="q"><span class="mk">Q</span><span>長高／減重等特別門診，定價要包套還是單算？</span></div>
+      <div class="q"><span class="mk">Q</span><span>功能醫學、預防醫學，經營上要「整合」還是「聚焦」？</span></div>
+      <div class="q"><span class="mk">Q</span><span>新的自費項目，怎麼低成本測試市場水溫？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 13 主題8 -->
+  <section class="slide dark" data-name="主題8 個人品牌">
+    <div class="theme-head">
+      <div class="theme-no">08</div>
+      <div>
+        <div class="kicker">THEME 08</div>
+        <h2>個人品牌與自媒體</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>想走品牌這條路，要投入多少時間、金錢與資源？</span></div>
+      <div class="q"><span class="mk">Q</span><span>SEO、IG、短影音、抖音……我該把資源集中在哪？</span></div>
+      <div class="q"><span class="mk">Q</span><span>自媒體要自己養，還是外包？人設又該怎麼設定？</span></div>
+      <div class="q"><span class="mk">Q</span><span>還沒試過、不知道怎麼開始——起手式到底是什麼？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 14 主題9 -->
+  <section class="slide light" data-name="主題9 職涯談判">
+    <div class="theme-head">
+      <div class="theme-no">09</div>
+      <div>
+        <div class="kicker" style="color:var(--navy);">THEME 09</div>
+        <h2 style="color:var(--navy);">職涯選擇與談判</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>回醫院還是去診所？又該怎麼選到一個好老闆？</span></div>
+      <div class="q"><span class="mk">Q</span><span>面對掌控慾強的主管，離職前該怎麼收尾、保護自己？</span></div>
+      <div class="q"><span class="mk">Q</span><span>薪資與合作條件，怎麼談出「雙方都覺得划算」的提案？</span></div>
+      <div class="q"><span class="mk">Q</span><span>受僱、合夥、開業——這幾條路，我究竟適合哪一條？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 15 主題10 -->
+  <section class="slide dark" data-name="主題10 時間平衡">
+    <div class="theme-head">
+      <div class="theme-no">10</div>
+      <div>
+        <div class="kicker">THEME 10</div>
+        <h2>時間管理與家庭平衡</h2>
+        <div class="goldline" style="margin:14px 0 0;"></div>
+      </div>
+    </div>
+    <div class="qlist">
+      <div class="q"><span class="mk">Q</span><span>門診、經營、自媒體、家庭，比重到底怎麼分配？</span></div>
+      <div class="q"><span class="mk">Q</span><span>三明治世代，育兒、事業、長輩照顧怎麼一起兼顧？</span></div>
+      <div class="q"><span class="mk">Q</span><span>我很「i」，社交很耗能，怎麼拓展人脈與資源？</span></div>
+      <div class="q"><span class="mk">Q</span><span>怎麼找到穩定持久的節奏，不要忽快忽慢、燃燒殆盡？</span></div>
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 16 金句 -->
+  <section class="slide ink" data-name="金句">
+    <div class="glow" style="left:50%;top:50%;transform:translate(-50%,-50%);width:680px;height:680px;opacity:.5;"></div>
+    <div class="quote">
+      <div class="kicker">A QUIET TRUTH</div>
+      <div class="goldline"></div>
+      <div class="big">
+        別人卡住的問題，<br>
+        <span class="gold">很可能也正是你的問題。</span><br><br>
+        差別只在於——<br>
+        他先問了，<br>
+        所以他先走出來了。
+      </div>
+    </div>
+    <div class="brandbar" style="position:static;margin-top:auto;"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 17 加入社群三步驟 -->
+  <section class="slide light" data-name="入群三步驟">
+    <div class="kicker" style="color:var(--navy);">JOIN THE COMMUNITY ｜ Givers Gain 私密社群</div>
+    <div class="goldline"></div>
+    <h2 style="color:var(--navy);">想一起走得更遠？<span class="gold">三步驟</span>申請入群。</h2>
+    <p class="body" style="margin-top:1.2vh;font-size:clamp(13px,1.3vw,16px);">
+      曾參與白院課程／演講的醫師，完成以下 3 個步驟即可申請加入。
+    </p>
+    <div class="steps">
+      <div class="step">
+        <span class="badge2">STEP 1</span>
+        <h4>公開分享心得</h4>
+        <ul>
+          <li>參與白院課程或演講後，公開分享真實心得</li>
+          <li>平台：FB／IG，並 Tag 張益豪醫師</li>
+          <li>Hashtag：#白袍人生學院 #講師姓名 #課程或演講名稱</li>
+        </ul>
+      </div>
+      <div class="step">
+        <span class="badge2">STEP 2</span>
+        <h4>填寫認證表單</h4>
+        <ul>
+          <li>填寫姓名、醫師字號等資料</li>
+          <li>上傳相關資料、附上公開貼文連結</li>
+          <li><a href="https://forms.gle/rqm7arfK5M8eCs1U6" target="_blank" rel="noopener">► 點此填寫認證表單</a></li>
+        </ul>
+      </div>
+      <div class="step">
+        <span class="badge2">STEP 3</span>
+        <h4>申請加入 LINE 社群</h4>
+        <ul>
+          <li>完成表單後，再申請加入 Line 私密社群</li>
+          <li>申請名稱格式：姓名＋醫師字號＋填表日期（8碼）</li>
+          <li>版主核對資料後放行</li>
+        </ul>
+      </div>
+    </div>
+    <div class="reminder">
+      <b>提醒事項：</b>三步驟缺一不可｜通過後請先自我介紹並閱讀記事本｜長期潛水者可能不定期移除。<br>
+      <b>聯絡我們：</b>官方 LINE @白袍人生學院　｜　Facebook：Course333　｜　Email：drchang.ent33@gmail.com
+    </div>
+    <div class="brandbar"><span class="dot"></span>白袍人生學院｜豪老師</div>
+  </section>
+
+  <!-- 18 CTA -->
+  <section class="slide dark" data-name="預約諮詢">
+    <div class="glow" style="right:-150px;bottom:-150px;opacity:.7;"></div>
+    <div class="kicker">YOUR NEXT STEP ｜ 下一步</div>
+    <div class="goldline"></div>
+    <h2>與其一個人慢慢摸索，<br>不如<span class="gold">花一小時，少走三年彎路。</span></h2>
+    <div class="cta-box">
+      <p class="body" style="margin:0;">
+        如果這 10 個主題裡，<br>
+        有一題，正好是你現在睡不著的那一題——<br>
+        那就是我們該聊聊的時候了。
+      </p>
+      <div class="cta-row">
+        <a class="pill" href="https://forms.gle/Nwz4dW2B9phHWWUNA" target="_blank" rel="noopener">預約一對一諮詢 →</a>
+        <a class="pill ghost" href="https://forms.gle/rqm7arfK5M8eCs1U6" target="_blank" rel="noopener">申請加入白院社群</a>
+      </div>
+    </div>
+    <p class="body" style="margin-top:auto;font-size:clamp(13px,1.3vw,17px);">
+      一群人一起打拼，走得更遠。　—　豪老師
+    </p>
+  </section>
+
+</div>
+
+<!-- controls -->
+<div id="dots"></div>
+<div id="nav">
+  <button class="navbtn" id="prev" aria-label="上一頁">‹</button>
+  <span id="counter">1 / 18</span>
+  <button class="navbtn" id="next" aria-label="下一頁">›</button>
+</div>
+<div class="hint">← → 鍵翻頁 ｜ F 全螢幕</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const dotsWrap=document.getElementById('dots');
+  const counter=document.getElementById('counter');
+  const prevBtn=document.getElementById('prev');
+  const nextBtn=document.getElementById('next');
+  let i=0;
+
+  slides.forEach((s,idx)=>{
+    const d=document.createElement('div');
+    d.className='dot'+(idx===0?' on':'');
+    d.addEventListener('click',()=>go(idx));
+    dotsWrap.appendChild(d);
+  });
+  const dots=[...document.querySelectorAll('.dot')];
+
+  function go(n){
+    i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===i));
+    dots.forEach((d,idx)=>d.classList.toggle('on',idx===i));
+    counter.textContent=(i+1)+' / '+slides.length;
+    prevBtn.disabled=(i===0);
+    nextBtn.disabled=(i===slides.length-1);
+  }
+  prevBtn.addEventListener('click',()=>go(i-1));
+  nextBtn.addEventListener('click',()=>go(i+1));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(i+1);}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(i-1);}
+    if(e.key==='Home')go(0);
+    if(e.key==='End')go(slides.length-1);
+    if(e.key.toLowerCase()==='f'){
+      if(!document.fullscreenElement)document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+  // swipe for touch
+  let x0=null;
+  document.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(x0===null)return;
+    const dx=e.changedTouches[0].clientX-x0;
+    if(Math.abs(dx)>50)go(dx<0?i+1:i-1);
+    x0=null;
+  },{passive:true});
+  go(0);
+</script>
+</body>
+</html>
